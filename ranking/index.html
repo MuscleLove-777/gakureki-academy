@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学偏差値ランキング | 学歴アカデミー</title>
+  <meta name="description" content="全国の大学を偏差値順にランキング。国公立・私立のフィルタリング、地域検索、ソート機能付き。就職力スコアも一覧で確認できます。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* ===== Ranking Page Specific Styles ===== */
+    .ranking-hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 3rem 1rem 2rem;
+      text-align: center;
+      color: #fff;
+    }
+    .ranking-hero h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .ranking-hero p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 0.75rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .filter-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    /* Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #2563eb;
+      flex-shrink: 0;
+    }
+    .filter-tabs button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: #fff;
+      color: #2563eb;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .filter-tabs button.active {
+      background: #2563eb;
+      color: #fff;
+    }
+    .filter-tabs button:hover:not(.active) {
+      background: #eff6ff;
+    }
+
+    /* Filter Controls */
+    .filter-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+      align-items: center;
+    }
+    .filter-controls select,
+    .filter-controls input {
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #fff;
+      color: #1e293b;
+      transition: border-color 0.2s;
+    }
+    .filter-controls select:focus,
+    .filter-controls input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+    .filter-controls input[type="text"] {
+      min-width: 180px;
+      flex: 1;
+      max-width: 300px;
+    }
+    .filter-result-count {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 500;
+      white-space: nowrap;
+      margin-left: auto;
+    }
+
+    /* Table Container */
+    .ranking-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .ranking-table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      min-width: 700px;
+    }
+    .ranking-table thead {
+      background: #1e293b;
+      color: #fff;
+    }
+    .ranking-table thead th {
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .ranking-table thead th:hover {
+      background: #334155;
+    }
+    .ranking-table thead th .sort-icon {
+      margin-left: 0.3rem;
+      opacity: 0.4;
+      font-size: 0.75rem;
+    }
+    .ranking-table thead th.sort-active .sort-icon {
+      opacity: 1;
+      color: #60a5fa;
+    }
+
+    .ranking-table tbody tr {
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.15s;
+    }
+    .ranking-table tbody tr:hover {
+      background: #f8fafc;
+    }
+    .ranking-table tbody tr:nth-child(even) {
+      background: #fafbfc;
+    }
+    .ranking-table tbody tr:nth-child(even):hover {
+      background: #f1f5f9;
+    }
+    .ranking-table tbody td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+    }
+
+    /* Rank Number */
+    .rank-num {
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #1e293b;
+      text-align: center;
+      min-width: 2.5rem;
+    }
+    .rank-num.top1 { color: #d4a017; }
+    .rank-num.top2 { color: #8a8a8a; }
+    .rank-num.top3 { color: #b87333; }
+
+    /* University Name */
+    .uni-name {
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .uni-type-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.4rem;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+    .uni-type-badge.national {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .uni-type-badge.private {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    /* Hensachi Badge */
+    .hensachi-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.95rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      min-width: 3rem;
+      text-align: center;
+    }
+    .hensachi-badge.level-70 {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 2px solid #fca5a5;
+    }
+    .hensachi-badge.level-60 {
+      background: #fffbeb;
+      color: #d97706;
+      border: 2px solid #fcd34d;
+    }
+    .hensachi-badge.level-50 {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 2px solid #86efac;
+    }
+    .hensachi-badge.level-40 {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 2px solid #93c5fd;
+    }
+
+    /* Group badge */
+    .group-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Job Score bar */
+    .job-score-cell {
+      min-width: 120px;
+    }
+    .job-score-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+    .job-score-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .job-score-val {
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    /* Load More Button */
+    .load-more-wrap {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .load-more-btn {
+      padding: 0.85rem 2.5rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    .load-more-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37,99,235,0.4);
+    }
+    .load-more-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #64748b;
+    }
+    .no-results .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .no-results p {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .ranking-hero h1 {
+        font-size: 1.5rem;
+      }
+      .filter-bar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-tabs {
+        align-self: center;
+      }
+      .filter-controls {
+        flex-direction: column;
+      }
+      .filter-controls select,
+      .filter-controls input {
+        width: 100%;
+        max-width: none;
+      }
+      .filter-result-count {
+        text-align: center;
+        margin-left: 0;
+      }
+      .ranking-table {
+        font-size: 0.8rem;
+      }
+      .ranking-table thead th,
+      .ranking-table tbody td {
+        padding: 0.5rem 0.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../" class="site-logo">
+        <span class="logo-icon">&#x1F393;</span>
+        <span class="logo-text">学歴アカデミー</span>
+      </a>
+      <nav class="site-nav">
+        <a href="../ranking/" class="nav-link active">偏差値ランキング</a>
+        <a href="../groups/" class="nav-link">大学群一覧</a>
+        <a href="../career/" class="nav-link">就職・キャリア</a>
+        <a href="../tools/" class="nav-link">診断ツール</a>
+      </nav>
+      <button class="nav-toggle" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="ranking-hero">
+    <h1>大学偏差値ランキング</h1>
+    <p>全国主要大学を偏差値・就職力スコアで比較。フィルター・ソート機能で自分に合った大学を見つけよう。</p>
+  </section>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-bar-inner">
+      <div class="filter-tabs">
+        <button class="active" data-type="all">全て</button>
+        <button data-type="national">国公立</button>
+        <button data-type="private">私立</button>
+      </div>
+      <div class="filter-controls">
+        <select id="regionFilter">
+          <option value="">地域: 全て</option>
+          <option value="北海道">北海道</option>
+          <option value="東北">東北</option>
+          <option value="関東">関東</option>
+          <option value="中部">中部</option>
+          <option value="近畿">近畿</option>
+          <option value="中国">中国</option>
+          <option value="九州">九州</option>
+        </select>
+        <select id="hensachiFilter">
+          <option value="">偏差値: 全て</option>
+          <option value="70-80">70以上</option>
+          <option value="60-70">60〜69</option>
+          <option value="50-60">50〜59</option>
+          <option value="40-50">40〜49</option>
+        </select>
+        <input type="text" id="searchBox" placeholder="大学名で検索...">
+        <span class="filter-result-count" id="resultCount"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ranking Table -->
+  <div class="ranking-container">
+    <div class="ranking-table-wrap">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th data-sort="rank">順位 <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-sort="name">大学名 <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-sort="hensachi">偏差値 <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-sort="group">大学群 <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-sort="region">所在地 <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-sort="jobScore">就職力 <span class="sort-icon">&#9650;&#9660;</span></th>
+          </tr>
+        </thead>
+        <tbody id="rankingBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-results" id="noResults" style="display:none;">
+      <div class="icon">&#x1F50D;</div>
+      <p>条件に合う大学が見つかりませんでした。</p>
+    </div>
+
+    <div class="load-more-wrap" id="loadMoreWrap">
+      <button class="load-more-btn" id="loadMoreBtn">もっと表示</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 学歴アカデミー All rights reserved.</p>
+      <p class="footer-note">当サイトの偏差値・データは参考値です。最新情報は各大学の公式サイトをご確認ください。</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/ranking.js"></script>
+</body>
+</html>

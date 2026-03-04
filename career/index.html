@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="業界別の学歴フィルター強度と偏差値帯別に狙える業界を徹底解説。就職活動に役立つ情報を網羅。">
+  <title>就職・採用市場と学歴フィルター | 学歴アカデミー</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ===== Career Page Specific Styles ===== */
+
+    /* Filter Explanation */
+    .filter-explanation {
+      background: var(--color-white);
+      padding: var(--spacing-6) 0;
+    }
+    .explanation-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-4);
+      margin-top: var(--spacing-5);
+    }
+    .explanation-card {
+      background: var(--color-bg);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-4);
+      border-left: 4px solid var(--color-accent);
+    }
+    .explanation-card h3 {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      margin-bottom: var(--spacing-2);
+      color: var(--color-primary);
+    }
+    .explanation-card p {
+      color: var(--color-text);
+      line-height: 1.8;
+      font-size: var(--font-size-sm);
+      margin-bottom: 0;
+    }
+
+    /* Filter Table Section */
+    .filter-table-section {
+      padding: var(--spacing-6) 0;
+    }
+    .filter-table-section .section-desc {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-5);
+    }
+
+    /* Strength Bar */
+    .strength-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .strength-bar {
+      display: flex;
+      gap: 3px;
+    }
+    .strength-pip {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .strength-pip.active {
+      color: #fff;
+    }
+    .strength-pip.inactive {
+      background: var(--color-border);
+    }
+    .strength-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .level-5 .strength-pip.active { background: #e53e3e; }
+    .level-4 .strength-pip.active { background: #ed8936; }
+    .level-3 .strength-pip.active { background: #ecc94b; }
+    .level-2 .strength-pip.active { background: #48bb78; }
+    .level-1 .strength-pip.active { background: #4299e1; }
+    .level-5 .strength-label { color: #e53e3e; }
+    .level-4 .strength-label { color: #ed8936; }
+    .level-3 .strength-label { color: #d69e2e; }
+    .level-2 .strength-label { color: #38a169; }
+    .level-1 .strength-label { color: #3182ce; }
+
+    .industry-name {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .border-text {
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+    .examples-text {
+      font-size: 0.82rem;
+      color: var(--color-text-light);
+    }
+    .note-text {
+      font-size: 0.82rem;
+      color: var(--color-text);
+      font-style: italic;
+    }
+
+    /* Matrix Section */
+    .matrix-section {
+      background: var(--color-white);
+      padding: var(--spacing-6) 0;
+    }
+    .matrix-section .section-desc {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-5);
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: var(--font-size-sm);
+    }
+    .matrix-table thead th {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 12px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .matrix-table thead th:first-child {
+      border-radius: var(--border-radius) 0 0 0;
+      text-align: left;
+      min-width: 120px;
+    }
+    .matrix-table thead th:last-child {
+      border-radius: 0 var(--border-radius) 0 0;
+    }
+    .matrix-table tbody td {
+      padding: 10px;
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .matrix-table tbody td:first-child {
+      text-align: left;
+      font-size: var(--font-size-sm);
+      background: #edf2f7;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .matrix-table tbody tr:hover td {
+      background: #ebf8ff;
+    }
+    .matrix-table tbody tr:hover td:first-child {
+      background: #dbeafe;
+    }
+    .matrix-cell-high {
+      color: #276749;
+      background: #f0fff4;
+    }
+    .matrix-cell-maybe {
+      color: #975a16;
+      background: #fffff0;
+    }
+    .matrix-cell-hard {
+      color: #9b2c2c;
+      background: #fff5f5;
+    }
+
+    /* Weak Filter Section */
+    .weak-filter-section {
+      padding: var(--spacing-6) 0;
+    }
+    .weak-filter-section .section-desc {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-5);
+    }
+    .weak-filter-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-4);
+    }
+    .weak-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-4);
+      box-shadow: var(--card-shadow);
+      border-top: 4px solid var(--color-success);
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
+    }
+    .weak-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .weak-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-3);
+    }
+    .weak-card h3 {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin-bottom: var(--spacing-2);
+      color: var(--color-primary);
+    }
+    .weak-card > p {
+      color: var(--color-text);
+      line-height: 1.8;
+      font-size: var(--font-size-sm);
+    }
+    .weak-card ul {
+      list-style: none;
+      padding: 0;
+      margin-top: var(--spacing-3);
+    }
+    .weak-card ul li {
+      padding: 4px 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+    }
+    .weak-card ul li::before {
+      content: "\2713";
+      color: var(--color-success);
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .explanation-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .weak-filter-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .weak-filter-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== ヘッダー ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">
+        <span class="logo-icon">&#x1F393;</span>
+        <span>学歴アカデミー</span>
+      </a>
+
+      <nav class="nav-menu" aria-label="メインナビゲーション">
+        <a href="../ranking/index.html">ランキング</a>
+        <a href="../groups/index.html">大学群</a>
+        <a href="index.html">就職・採用</a>
+        <a href="../tools/compare.html">比較ツール</a>
+        <a href="../tools/diagnosis.html">診断ツール</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <nav class="mobile-menu" id="mobile-menu" aria-label="モバイルナビゲーション">
+      <a href="../ranking/index.html">ランキング</a>
+      <a href="../groups/index.html">大学群</a>
+      <a href="index.html">就職・採用</a>
+      <a href="../tools/compare.html">比較ツール</a>
+      <a href="../tools/diagnosis.html">診断ツール</a>
+    </nav>
+  </header>
+
+  <!-- ========== メインコンテンツ ========== -->
+  <main>
+
+    <!-- ===== ヒーロー ===== -->
+    <section class="hero">
+      <div class="container">
+        <h1>就職・採用市場と<br>学歴フィルター</h1>
+        <p>日本の就職活動において「学歴フィルター」は見えない壁として存在します。業界ごとのフィルター強度と、偏差値帯別に狙える業界を徹底解説します。</p>
+      </div>
+    </section>
+
+    <!-- ===== 学歴フィルターとは ===== -->
+    <section class="filter-explanation">
+      <div class="container">
+        <h2 class="section-title">学歴フィルターとは？</h2>
+        <div class="explanation-grid">
+          <div class="explanation-card">
+            <h3>学歴フィルターの仕組み</h3>
+            <p>学歴フィルターとは、企業がエントリーシート（ES）選考や説明会予約の段階で、大学名を基準に応募者を絞り込む慣行です。大量の応募者を効率的に処理するため、特に人気企業で多く見られます。</p>
+          </div>
+          <div class="explanation-card">
+            <h3>なぜフィルターが存在するか</h3>
+            <p>大手企業には数万単位のエントリーが殺到します。全員を面接することは物理的に不可能なため、過去の採用実績や入社後の活躍データから「この大学レベル以上なら一定のクオリティが見込める」という判断基準を設けています。</p>
+          </div>
+          <div class="explanation-card">
+            <h3>フィルターの実態</h3>
+            <p>企業は公式にはフィルターの存在を認めていません。しかし「大学名を入力したら説明会の予約枠が満席になった」「別の大学名では空きがあった」という報告は後を絶ちません。</p>
+          </div>
+          <div class="explanation-card">
+            <h3>フィルターを突破するには</h3>
+            <p>学歴だけが全てではありません。インターン参加、OB/OG訪問、資格取得、留学経験、実務スキルなど、学歴以外の武器を磨くことで、フィルターを超えた選考に進めるケースも多くあります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 業界別フィルター強度テーブル ===== -->
+    <section class="filter-table-section">
+      <div class="container">
+        <h2 class="section-title">業界別 学歴フィルター強度</h2>
+        <p class="section-desc">レベル5（最強）からレベル1（弱い）まで、業界ごとのフィルター強度を一覧で比較</p>
+        <div class="table-wrapper">
+          <table class="data-table" id="filterTable">
+            <thead>
+              <tr>
+                <th>業界</th>
+                <th>フィルター強度</th>
+                <th>ボーダーライン</th>
+                <th>代表企業</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody id="filterTableBody">
+              <!-- JS で生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 偏差値帯別マトリクス ===== -->
+    <section class="matrix-section">
+      <div class="container">
+        <h2 class="section-title">偏差値帯別「狙える業界」マトリクス</h2>
+        <p class="section-desc">あなたの偏差値帯から、狙える業界を一目で確認</p>
+        <div class="table-wrapper" style="background: transparent; box-shadow: none;">
+          <table class="matrix-table" id="matrixTable">
+            <thead id="matrixHead">
+              <!-- JS で生成 -->
+            </thead>
+            <tbody id="matrixBody">
+              <!-- JS で生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 学歴フィルターが弱い分野 ===== -->
+    <section class="weak-filter-section">
+      <div class="container">
+        <h2 class="section-title">学歴フィルターが弱い分野</h2>
+        <p class="section-desc">学歴よりスキル・実力が評価される業界を知ろう</p>
+        <div class="weak-filter-cards">
+          <div class="weak-card">
+            <div class="weak-card-icon">&#128187;</div>
+            <h3>IT・エンジニア</h3>
+            <p>プログラミングスキルやポートフォリオが最重要。学歴よりも「何が作れるか」が問われます。</p>
+            <ul>
+              <li>外資IT（Google、Amazonなど）はコーディング試験重視</li>
+              <li>メガベンチャーは実績・ポートフォリオ重視</li>
+              <li>SIerも近年はスキル採用が増加</li>
+              <li>フリーランスなら完全に実力主義</li>
+            </ul>
+          </div>
+          <div class="weak-card">
+            <div class="weak-card-icon">&#128218;</div>
+            <h3>公務員</h3>
+            <p>筆記試験の成績がほぼ全てを決める、最も公平な就職ルートの一つです。</p>
+            <ul>
+              <li>国家一般職・地方上級は筆記試験勝負</li>
+              <li>出身大学に関係なく受験可能</li>
+              <li>面接もあるが学歴は問われない</li>
+              <li>安定した収入と福利厚生</li>
+            </ul>
+          </div>
+          <div class="weak-card">
+            <div class="weak-card-icon">&#128300;</div>
+            <h3>理系・研究職</h3>
+            <p>研究実績や専門スキルが評価基準。学部の偏差値よりも研究室・論文実績が重要です。</p>
+            <ul>
+              <li>大学院のロンダリングが有効</li>
+              <li>研究室推薦で大手メーカーへ</li>
+              <li>特許・学会発表実績が武器に</li>
+              <li>教授のコネクションも重要</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== フッター ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>学歴アカデミー</h4>
+          <p class="text-sm" style="color: rgba(255,255,255,0.6); line-height: 1.8;">
+            偏差値だけでは見えない大学の本当の価値を、データに基づいて多角的に分析・紹介するサイトです。
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>コンテンツ</h4>
+          <ul>
+            <li><a href="../ranking/index.html">ランキング</a></li>
+            <li><a href="../groups/index.html">大学群</a></li>
+            <li><a href="index.html">就職・採用</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>ツール</h4>
+          <ul>
+            <li><a href="../tools/compare.html">大学群比較ツール</a></li>
+            <li><a href="../tools/diagnosis.html">学歴フィルター診断</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>その他</h4>
+          <ul>
+            <li><a href="#">免責事項</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>本サイトのデータは各種公開情報を基に独自に編集したものです。正確性を保証するものではありません。</p>
+        <p>&copy; 2026 学歴アカデミー All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/career.js"></script>
+</body>
+</html>

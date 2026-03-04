@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="学歴アカデミー - 偏差値だけでは見えない、大学の本当の価値を多角的に分析。ランキング・大学群・就職データを網羅。">
+  <title>学歴アカデミー | 大学の本当の価値がわかるサイト</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========== ヘッダー ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="site-logo">
+        <span class="logo-icon">&#x1F393;</span>
+        <span>学歴アカデミー</span>
+      </a>
+
+      <!-- デスクトップナビ -->
+      <nav class="nav-menu" aria-label="メインナビゲーション">
+        <a href="#">ランキング</a>
+        <a href="#">大学群</a>
+        <a href="#">就職・採用</a>
+        <a href="#">ツール</a>
+      </nav>
+
+      <!-- ハンバーガー -->
+      <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- モバイルメニュー -->
+    <nav class="mobile-menu" id="mobile-menu" aria-label="モバイルナビゲーション">
+      <a href="#">ランキング</a>
+      <a href="#">大学群</a>
+      <a href="#">就職・採用</a>
+      <a href="#">ツール</a>
+    </nav>
+  </header>
+
+  <!-- ========== メインコンテンツ ========== -->
+  <main>
+
+    <!-- ===== ヒーローセクション ===== -->
+    <section class="hero">
+      <div class="container">
+        <h1>偏差値だけでは見えない、<br>大学の本当の価値</h1>
+        <p>偏差値・就職力・年収データを多角的に分析。<br>あなたの進路選びを、データで支えます。</p>
+        <div class="hero-buttons">
+          <a href="#ranking" class="btn btn-primary btn-lg">ランキングを見る</a>
+          <a href="#groups" class="btn btn-secondary btn-lg">大学群から探す</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 特徴カード（3カラム） ===== -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">学歴アカデミーの特徴</h2>
+        <div class="grid grid-3">
+
+          <div class="card text-center">
+            <div class="card-icon">&#x1F4CA;</div>
+            <h3 class="card-title">偏差値ランキング</h3>
+            <p class="card-text">全国主要大学の偏差値を一覧で比較。大学群ごとの偏差値帯もひと目でわかります。</p>
+            <a href="#" class="card-link">ランキングへ &rarr;</a>
+          </div>
+
+          <div class="card text-center">
+            <div class="card-icon">&#x1F5FA;</div>
+            <h3 class="card-title">大学群マップ</h3>
+            <p class="card-text">旧帝大・早慶・MARCH・関関同立など、大学群ごとの特徴と序列を解説します。</p>
+            <a href="#" class="card-link">大学群を見る &rarr;</a>
+          </div>
+
+          <div class="card text-center">
+            <div class="card-icon">&#x1F4BC;</div>
+            <h3 class="card-title">就職・採用データ</h3>
+            <p class="card-text">就職力スコアや平均年収など、卒業後のキャリアに関するデータを分析します。</p>
+            <a href="#" class="card-link">データを見る &rarr;</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 人気ランキングプレビュー TOP10 ===== -->
+    <section class="section" id="ranking" style="background-color: var(--color-white);">
+      <div class="container">
+        <h2 class="section-title">総合ランキング TOP10</h2>
+        <p class="text-center text-light mb-4">偏差値と就職力スコアの総合評価による上位10校</p>
+
+        <div class="table-responsive-cards">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">順位</th>
+                  <th>大学名</th>
+                  <th>大学群</th>
+                  <th style="width:80px;">偏差値</th>
+                  <th style="width:180px;">就職力スコア</th>
+                </tr>
+              </thead>
+              <tbody id="top10-body">
+                <!-- JS で動的生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="#" class="btn btn-outline">全ランキングを見る &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 大学群クイックナビ ===== -->
+    <section class="section" id="groups">
+      <div class="container">
+        <h2 class="section-title">大学群から探す</h2>
+        <p class="text-center text-light mb-4">各大学群の特徴と所属大学をチェック</p>
+
+        <div class="grid grid-3" id="group-cards">
+          <!-- JS で動的生成 -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== フッター ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-section">
+          <h4>学歴アカデミー</h4>
+          <p class="text-sm" style="color: rgba(255,255,255,0.6); line-height: 1.8;">
+            偏差値だけでは見えない大学の本当の価値を、データに基づいて多角的に分析・紹介するサイトです。
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h4>サイトマップ</h4>
+          <ul>
+            <li><a href="#">ランキング</a></li>
+            <li><a href="#">大学群</a></li>
+            <li><a href="#">就職・採用</a></li>
+            <li><a href="#">ツール</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>大学群</h4>
+          <ul>
+            <li><a href="#">東京一工</a></li>
+            <li><a href="#">旧帝大</a></li>
+            <li><a href="#">早慶上理ICU</a></li>
+            <li><a href="#">MARCH</a></li>
+            <li><a href="#">関関同立</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>免責事項・出典</h4>
+          <ul>
+            <li><a href="#">免責事項</a></li>
+            <li><a href="#">データ出典</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>本サイトのデータは各種公開情報を基に独自に編集したものです。正確性を保証するものではありません。</p>
+        <p>&copy; 2024 学歴アカデミー All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

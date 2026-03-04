@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="偏差値を入力するだけで学歴フィルターレベルと狙える業界を瞬時に診断するツール。">
+  <title>学歴フィルター診断 | 学歴アカデミー</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* ===== Diagnosis Tool Specific Styles ===== */
+
+    .hero-diagnosis {
+      background: linear-gradient(135deg, #553c9a 0%, #6b46c1 50%, #805ad5 100%);
+    }
+
+    /* Input Section */
+    .diagnosis-input {
+      background: var(--color-white);
+      padding: var(--spacing-6) 0;
+    }
+    .input-card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--color-bg);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-5);
+      box-shadow: var(--card-shadow);
+    }
+    .input-card h2 {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--spacing-5);
+      color: var(--color-primary);
+    }
+    .slider-group {
+      margin-bottom: var(--spacing-4);
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-3);
+    }
+    .slider-label {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .hensachi-display {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #6b46c1;
+      transition: color var(--transition-base);
+    }
+    .slider-input {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(to right, #e53e3e, #ed8936, #ecc94b, #48bb78, #3182ce);
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      background: var(--color-white);
+      border: 3px solid #6b46c1;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+    }
+    .slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    .slider-input::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      background: var(--color-white);
+      border: 3px solid #6b46c1;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--spacing-2);
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+    }
+    .number-input-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      margin-top: var(--spacing-3);
+    }
+    .number-input-group label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+    .number-input {
+      width: 100px;
+      padding: 10px 12px;
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      border: 2px solid var(--color-border);
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-family: var(--font-family);
+      transition: border-color var(--transition-base);
+    }
+    .number-input:focus {
+      outline: none;
+      border-color: #6b46c1;
+      box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.15);
+    }
+    .diagnosis-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      background: linear-gradient(135deg, #6b46c1, #805ad5);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: opacity var(--transition-base), transform 0.1s;
+      margin-top: var(--spacing-5);
+      font-family: var(--font-family);
+    }
+    .diagnosis-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Results Section */
+    .diagnosis-results {
+      padding: var(--spacing-6) 0;
+      display: none;
+    }
+    .diagnosis-results.visible {
+      display: block;
+    }
+
+    /* Level Card */
+    .level-card {
+      max-width: 680px;
+      margin: 0 auto var(--spacing-5);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-5);
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+    .level-card.level-high {
+      background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+      border: 2px solid #48bb78;
+    }
+    .level-card.level-mid-high {
+      background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+      border: 2px solid #4299e1;
+    }
+    .level-card.level-mid {
+      background: linear-gradient(135deg, #fffff0, #fefcbf);
+      border: 2px solid #ecc94b;
+    }
+    .level-card.level-mid-low {
+      background: linear-gradient(135deg, #fffaf0, #feebc8);
+      border: 2px solid #ed8936;
+    }
+    .level-card.level-low {
+      background: linear-gradient(135deg, #fff5f5, #fed7d7);
+      border: 2px solid #e53e3e;
+    }
+    .level-card.level-bottom {
+      background: linear-gradient(135deg, var(--color-bg), #edf2f7);
+      border: 2px solid #a0aec0;
+    }
+    .level-hensachi {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-2);
+    }
+    .level-high .level-hensachi { color: #276749; }
+    .level-mid-high .level-hensachi { color: #2b6cb0; }
+    .level-mid .level-hensachi { color: #975a16; }
+    .level-mid-low .level-hensachi { color: #c05621; }
+    .level-low .level-hensachi { color: #c53030; }
+    .level-bottom .level-hensachi { color: #718096; }
+    .level-label {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin-bottom: var(--spacing-3);
+      color: var(--color-primary);
+    }
+    .level-comment {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--color-text);
+      margin-bottom: 0;
+    }
+
+    /* Industry Cards */
+    .industry-section-title {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--spacing-4);
+      color: var(--color-primary);
+    }
+    .industry-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-3);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .industry-card {
+      background: var(--color-white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-4);
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      border-left: 4px solid #6b46c1;
+      font-weight: 700;
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+    .industry-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .industry-card.card-green { border-left-color: var(--color-success); }
+    .industry-card.card-blue { border-left-color: #4299e1; }
+    .industry-card.card-yellow { border-left-color: var(--color-accent-light); }
+    .industry-card.card-orange { border-left-color: #ed8936; }
+    .industry-card.card-red { border-left-color: var(--color-warning); }
+    .industry-card.card-gray { border-left-color: #a0aec0; }
+
+    /* Advice Section */
+    .advice-section {
+      max-width: 680px;
+      margin: var(--spacing-5) auto 0;
+      background: var(--color-white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-4);
+      box-shadow: var(--card-shadow);
+    }
+    .advice-section h3 {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      margin-bottom: var(--spacing-3);
+      color: var(--color-primary);
+    }
+    .advice-section p {
+      color: var(--color-text);
+      line-height: 1.8;
+      font-size: var(--font-size-sm);
+      margin-bottom: 0;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .industry-cards {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+    @media (max-width: 767px) {
+      .level-hensachi {
+        font-size: 2.5rem;
+      }
+      .hensachi-display {
+        font-size: 1.8rem;
+      }
+      .input-card {
+        padding: var(--spacing-4);
+        margin: 0 var(--spacing-2);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== ヘッダー ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">
+        <span class="logo-icon">&#x1F393;</span>
+        <span>学歴アカデミー</span>
+      </a>
+
+      <nav class="nav-menu" aria-label="メインナビゲーション">
+        <a href="../ranking/index.html">ランキング</a>
+        <a href="../groups/index.html">大学群</a>
+        <a href="../career/index.html">就職・採用</a>
+        <a href="compare.html">比較ツール</a>
+        <a href="diagnosis.html">診断ツール</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <nav class="mobile-menu" id="mobile-menu" aria-label="モバイルナビゲーション">
+      <a href="../ranking/index.html">ランキング</a>
+      <a href="../groups/index.html">大学群</a>
+      <a href="../career/index.html">就職・採用</a>
+      <a href="compare.html">比較ツール</a>
+      <a href="diagnosis.html">診断ツール</a>
+    </nav>
+  </header>
+
+  <!-- ========== メインコンテンツ ========== -->
+  <main>
+
+    <!-- ===== ヒーロー ===== -->
+    <section class="hero hero-diagnosis">
+      <div class="container">
+        <h1>学歴フィルター診断</h1>
+        <p>あなたの偏差値を入力するだけで、学歴フィルターのレベルと狙える業界を瞬時に診断します。</p>
+      </div>
+    </section>
+
+    <!-- ===== Input Section ===== -->
+    <section class="diagnosis-input">
+      <div class="container">
+        <div class="input-card">
+          <h2>偏差値を入力してください</h2>
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">偏差値</span>
+              <span class="hensachi-display" id="hensachiDisplay">55.0</span>
+            </div>
+            <div class="slider-track">
+              <input type="range" class="slider-input" id="hensachiSlider" min="35" max="80" step="0.5" value="55">
+            </div>
+            <div class="slider-labels">
+              <span>35</span>
+              <span>45</span>
+              <span>55</span>
+              <span>65</span>
+              <span>75</span>
+              <span>80</span>
+            </div>
+          </div>
+          <div class="number-input-group">
+            <label for="hensachiNumber">直接入力:</label>
+            <input type="number" class="number-input" id="hensachiNumber" min="35" max="80" step="0.5" value="55.0">
+          </div>
+          <button class="diagnosis-btn" id="diagnosisBtn">診断する</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Results Section ===== -->
+    <section class="diagnosis-results" id="diagnosisResults">
+      <div class="container">
+        <!-- Level Card -->
+        <div class="level-card" id="levelCard">
+          <div class="level-hensachi" id="resultHensachi"></div>
+          <div class="level-label" id="resultLabel"></div>
+          <p class="level-comment" id="resultComment"></p>
+        </div>
+
+        <!-- Industry Cards -->
+        <h3 class="industry-section-title">狙える業界</h3>
+        <div class="industry-cards" id="industryCards">
+          <!-- JS で生成 -->
+        </div>
+
+        <!-- Advice Section -->
+        <div class="advice-section" id="adviceSection">
+          <h3>アドバイス</h3>
+          <p id="adviceText"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== フッター ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>学歴アカデミー</h4>
+          <p class="text-sm" style="color: rgba(255,255,255,0.6); line-height: 1.8;">
+            偏差値だけでは見えない大学の本当の価値を、データに基づいて多角的に分析・紹介するサイトです。
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>コンテンツ</h4>
+          <ul>
+            <li><a href="../ranking/index.html">ランキング</a></li>
+            <li><a href="../groups/index.html">大学群</a></li>
+            <li><a href="../career/index.html">就職・採用</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>ツール</h4>
+          <ul>
+            <li><a href="compare.html">大学群比較ツール</a></li>
+            <li><a href="diagnosis.html">学歴フィルター診断</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>その他</h4>
+          <ul>
+            <li><a href="#">免責事項</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>本サイトのデータは各種公開情報を基に独自に編集したものです。正確性を保証するものではありません。</p>
+        <p>&copy; 2026 学歴アカデミー All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/diagnosis.js"></script>
+</body>
+</html>
